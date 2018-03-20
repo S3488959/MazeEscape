@@ -45,6 +45,7 @@ public class GenerateMap : NetworkBehaviour {
                 //Add it to the master sector control.
                 msc.AddSector(sect);
                 NetworkServer.Spawn(sect.gameObject);
+
             }
         }
 		

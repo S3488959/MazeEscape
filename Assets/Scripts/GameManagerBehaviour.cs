@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 
 public class GameManagerBehaviour : NetworkManager {
 
-    List<SlaveBehaviour> slaves = new List<SlaveBehaviour>();
+    List<PlayerBehaviour> slaves = new List<PlayerBehaviour>();
     Transform spawnPoints;
 
     // Use this for initialization
@@ -14,7 +14,7 @@ public class GameManagerBehaviour : NetworkManager {
 
     public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId) {
         GameObject player = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
-        slaves.Add(player.GetComponent<SlaveBehaviour>());
+        slaves.Add(player.GetComponent<PlayerBehaviour>());
         NetworkServer.AddPlayerForConnection(conn, player, playerControllerId);
     }
 
@@ -22,7 +22,7 @@ public class GameManagerBehaviour : NetworkManager {
     void Update () {
 	}
 
-    public SlaveBehaviour[] GetSlaves() {
+    public PlayerBehaviour[] GetSlaves() {
         return slaves.ToArray();
     }
 

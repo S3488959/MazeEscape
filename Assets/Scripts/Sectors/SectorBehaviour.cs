@@ -57,6 +57,8 @@ public class SectorBehaviour : NetworkBehaviour {
     // Use this for initialization
     void Start() {
 
+        transform.parent = GameObject.Find("SectorHolder").transform;
+
         timeToMove = 10f;
 
         if (fullWall == null && wall != null)

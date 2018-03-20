@@ -46,7 +46,7 @@ public class MinmapBehaviour : MonoBehaviour {
 
         miniMapRefresh += Time.deltaTime;
         if (miniMapRefresh > 0.0f) {
-
+        /*
             SlaveBehaviour[] slaves = gameManager.GetSlaves();
             for (int i = 0; i < slaves.Length; i++) {
                 GameObject pmt = slaves[i].minimapPosToken;
@@ -57,7 +57,7 @@ public class MinmapBehaviour : MonoBehaviour {
                 pmt.transform.SetParent(transform);
                 pmt.GetComponent<RectTransform>().localPosition = new Vector3(slaves[i].transform.position.x * 1.3f, slaves[i].transform.position.z * 1.3f, 0);
                 pmt.transform.SetParent(transform.parent);
-            }
+            }*/
 
             for (int i = 0; i < sects.Length; i++) {
                 SectorBehaviour sect = sects[i];
