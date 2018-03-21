@@ -10,7 +10,7 @@ public class MinmapBehaviour : MonoBehaviour {
     public GameObject sectorMini;
     public GameObject playerMapToken;
 
-    GameObject player;
+    GameManagerBehaviour gameManager;
 
     SectorBehaviour[] sects;
 
@@ -27,9 +27,7 @@ public class MinmapBehaviour : MonoBehaviour {
 
         yield return new WaitForSeconds(0.001f);
 
-        //mcp = GameObject.FindGameObjectWithTag("MainCamera").transform.parent.parent.GetComponent<MasterSectorControl>();
-
-        player = GameObject.FindGameObjectWithTag("Player");
+        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManagerBehaviour>();
 
         sects = mcp.GetSectors();
         for (int i = 0; i < sects.Length; i++) {
@@ -48,10 +46,18 @@ public class MinmapBehaviour : MonoBehaviour {
 
         miniMapRefresh += Time.deltaTime;
         if (miniMapRefresh > 0.0f) {
-
-            playerMapToken.transform.SetParent(transform);
-            playerMapToken.GetComponent<RectTransform>().localPosition = new Vector3(player.transform.position.x * 1.3f, player.transform.position.z * 1.3f, 0);
-            playerMapToken.transform.SetParent(transform.parent);
+        /*
+            SlaveBehaviour[] slaves = gameManager.GetSlaves();
+            for (int i = 0; i < slaves.Length; i++) {
+                GameObject pmt = slaves[i].minimapPosToken;
+                if (pmt == null) {
+                    pmt = Instantiate(playerMapToken, transform);
+                    slaves[i].minimapPosToken = pmt;
+                }
+                pmt.transform.SetParent(transform);
+                pmt.GetComponent<RectTransform>().localPosition = new Vector3(slaves[i].transform.position.x * 1.3f, slaves[i].transform.position.z * 1.3f, 0);
+                pmt.transform.SetParent(transform.parent);
+            }*/
 
             for (int i = 0; i < sects.Length; i++) {
                 SectorBehaviour sect = sects[i];

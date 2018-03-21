@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 /*  Name: GenerateMap.cs
  *  Author: Todd O'Donnell
@@ -12,7 +13,7 @@ using UnityEngine;
  */
 
 [RequireComponent(typeof(MasterSectorControl))]
-public class GenerateMap : MonoBehaviour {
+public class GenerateMap : NetworkBehaviour {
 
     //REPLACE THIS WITH A LIST OF ALL THE SECTORS.
     public SectorBehaviour defaultSector;
@@ -24,7 +25,9 @@ public class GenerateMap : MonoBehaviour {
     private static int MAP_HEIGHT = 16;
 
     // Use this for initialization
-    void Start () {
+    public override void OnStartServer () {
+
+        Debug.Log("ServerStart");
 
         //Get the refrence to the master sector control.
         msc = transform.GetComponent<MasterSectorControl>();
@@ -41,6 +44,8 @@ public class GenerateMap : MonoBehaviour {
                 SectorBehaviour sect = Instantiate(defaultSector, new Vector3((ix-MAP_WIDTH/2)*10, 0, (iy-MAP_HEIGHT/2)*10), defaultSector.transform.rotation);
                 //Add it to the master sector control.
                 msc.AddSector(sect);
+                NetworkServer.Spawn(sect.gameObject);
+
             }
         }
 		

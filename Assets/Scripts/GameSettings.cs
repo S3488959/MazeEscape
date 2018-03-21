@@ -16,11 +16,9 @@ public class GameSettings {
 
         if (PLAYSTATE == PLAY_STATE.MASTER || PLAYSTATE == PLAY_STATE.SPECTATOR) {
             master.transform.GetChild(0).gameObject.SetActive(true);
-            player.transform.GetChild(0).gameObject.SetActive(false);
         }
         else {
             master.transform.GetChild(0).gameObject.SetActive(false);
-            player.transform.GetChild(0).gameObject.SetActive(true);
         }
         
 

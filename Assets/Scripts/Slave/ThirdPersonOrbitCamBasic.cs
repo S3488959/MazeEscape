@@ -11,8 +11,8 @@ public class ThirdPersonOrbitCamBasic : MonoBehaviour
 	public float verticalAimingSpeed = 6f;                             // Vertical turn speed.
 	public float maxVerticalAngle = 30f;                               // Camera max clamp angle. 
 	public float minVerticalAngle = -60f;                              // Camera min clamp angle.
-	public string XAxis = "Analog X";                                  // The default horizontal axis input name.
-	public string YAxis = "Analog Y";                                  // The default vertical axis input name.
+	public string XAxis = "RightStickX";                                  // The default horizontal axis input name.
+	public string YAxis = "RightStickY";                                  // The default vertical axis input name.
 
 	private float angleH = 0;                                          // Float to store camera horizontal angle related to mouse movement.
 	private float angleV = 0;                                          // Float to store camera vertical angle related to mouse movement.

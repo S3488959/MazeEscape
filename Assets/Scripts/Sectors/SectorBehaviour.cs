@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class SectorBehaviour : MonoBehaviour {
+public class SectorBehaviour : NetworkBehaviour {
 
     //Wether or not the master can control these aspects.
     bool roomMove = true;
@@ -55,6 +56,8 @@ public class SectorBehaviour : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
+
+        transform.parent = GameObject.Find("SectorHolder").transform;
 
         timeToMove = 10f;
 

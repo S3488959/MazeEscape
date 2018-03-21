@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 [System.Serializable]
 public class velocity
@@ -12,7 +13,7 @@ public class velocity
     public float jump;
 }
 
-public class SlaveController : MonoBehaviour
+public class SlaveController : NetworkBehaviour
 {
     public velocity vel;
     private float currentVel;
@@ -47,10 +48,6 @@ public class SlaveController : MonoBehaviour
 
         ChangeView();
     }
-
-    // Use this for initialization
-    void Start () {
-	}
 	
 	// Update is called once per frame
 	void Update () {
@@ -59,6 +56,7 @@ public class SlaveController : MonoBehaviour
 
     void FixedUpdate()
     {
+
         anim.SetBool("isGround", IsGrounded());
         if (IsGrounded())
         {
@@ -243,7 +241,7 @@ public class SlaveController : MonoBehaviour
             FullBody.SetActive(false);
             NoHead.SetActive(true);
 
-            ThirdPersonCamera.gameObject.SetActive(false);
+            //ThirdPersonCamera.gameObject.SetActive(false);
             FirstPersonCamera.gameObject.SetActive(true);
             currentCamera = FirstPersonCamera;
         }
@@ -252,7 +250,7 @@ public class SlaveController : MonoBehaviour
             FullBody.SetActive(true);
             NoHead.SetActive(false);
 
-            ThirdPersonCamera.gameObject.SetActive(true);
+            //ThirdPersonCamera.gameObject.SetActive(true);
             FirstPersonCamera.gameObject.SetActive(false);
             currentCamera = ThirdPersonCamera;
         }
