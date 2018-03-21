@@ -20,7 +20,7 @@ public class MinmapBehaviour : MonoBehaviour {
 
     private void Start() {
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManagerBehaviour>();
-        mcp = GameObject.FindGameObjectWithTag("Master").GetComponent<MasterSectorControl>();
+        
         StartCoroutine(LateStart());
     }
 

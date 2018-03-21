@@ -45,7 +45,6 @@ public class SlaveController : NetworkBehaviour
         anim = GetComponent<Animator>();
 
         capExtents = capsule.bounds.extents;
-
         ChangeView();
     }
 	
