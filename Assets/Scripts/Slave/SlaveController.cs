@@ -38,7 +38,7 @@ public class SlaveController : NetworkBehaviour
     public GameObject FullBody;
     public GameObject NoHead;
 
-    void Awake()
+    void Start()
     {
         rigid = GetComponent<Rigidbody>();
         capsule = GetComponent<CapsuleCollider>();
@@ -51,20 +51,24 @@ public class SlaveController : NetworkBehaviour
 	
 	// Update is called once per frame
 	void Update () {
-        GetInput();
+        
 	}
 
     void FixedUpdate()
     {
 
         anim.SetBool("isGround", IsGrounded());
-        if (IsGrounded())
+        if (IsGrounded() && input != Vector3.zero)
         {
             anim.SetBool("isMoving", true);
             Rotate();
             //Move();
             AnimatorMove();
             Jump();
+        }
+        else
+        {
+            anim.SetBool("isMoving", false);
         }
     }
 
@@ -73,7 +77,7 @@ public class SlaveController : NetworkBehaviour
         return currentCamera.transform.forward * input.z + currentCamera.transform.right * input.x;
     }
 
-    void GetInput()
+    public void GetInput()
     {
         input = new Vector3
         {
@@ -90,11 +94,7 @@ public class SlaveController : NetworkBehaviour
 
     void AnimatorMove()
     {
-        if (input == Vector3.zero)
-        {
-            anim.SetBool("isMoving", false);
-        }
-        
+       
         anim.SetFloat("xVel", input.x);
         anim.SetFloat("zVel", input.z);
         if (Input.GetKey(KeyCode.LeftShift))
@@ -241,7 +241,7 @@ public class SlaveController : NetworkBehaviour
             FullBody.SetActive(false);
             NoHead.SetActive(true);
 
-            //ThirdPersonCamera.gameObject.SetActive(false);
+            ThirdPersonCamera.gameObject.SetActive(false);
             FirstPersonCamera.gameObject.SetActive(true);
             currentCamera = FirstPersonCamera;
         }
@@ -250,7 +250,7 @@ public class SlaveController : NetworkBehaviour
             FullBody.SetActive(true);
             NoHead.SetActive(false);
 
-            //ThirdPersonCamera.gameObject.SetActive(true);
+            ThirdPersonCamera.gameObject.SetActive(true);
             FirstPersonCamera.gameObject.SetActive(false);
             currentCamera = ThirdPersonCamera;
         }

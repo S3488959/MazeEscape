@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MasterSectorControl : MonoBehaviour {
-
     List<SectorBehaviour> allSectors = new List<SectorBehaviour>();
 
     SectorBehaviour sectorSelected;

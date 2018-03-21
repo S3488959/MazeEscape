@@ -25,7 +25,7 @@ public class GenerateMap : NetworkBehaviour {
     private static int MAP_HEIGHT = 16;
 
     // Use this for initialization
-    public override void OnStartServer () {
+    void Start () {
 
         Debug.Log("ServerStart");
 

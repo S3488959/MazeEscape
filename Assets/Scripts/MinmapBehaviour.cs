@@ -19,6 +19,8 @@ public class MinmapBehaviour : MonoBehaviour {
     public MasterSectorControl mcp;
 
     private void Start() {
+        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManagerBehaviour>();
+        mcp = GameObject.FindGameObjectWithTag("Master").GetComponent<MasterSectorControl>();
         StartCoroutine(LateStart());
     }
 
@@ -26,8 +28,6 @@ public class MinmapBehaviour : MonoBehaviour {
     IEnumerator LateStart () {
 
         yield return new WaitForSeconds(0.001f);
-
-        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManagerBehaviour>();
 
         sects = mcp.GetSectors();
         for (int i = 0; i < sects.Length; i++) {

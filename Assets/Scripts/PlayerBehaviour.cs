@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 public class PlayerBehaviour : NetworkBehaviour {
+
+    GameObject[] slaveCameras;
+    SlaveController slave;
     [SyncVar]
     int ap = 0;
     
@@ -12,18 +15,17 @@ public class PlayerBehaviour : NetworkBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        if (isServer) {
-            transform.GetChild(0).gameObject.SetActive(false);
-            transform.position = new Vector3(0, 40, 0);
-        }
-		
-	}
+        
+        if(isLocalPlayer)
+            slave = gameObject.GetComponent<SlaveController>();
+    }
 	
 	// Update is called once per frame
 	void Update () {
-
         if (!isLocalPlayer)
-            return;
+        {
+            return;          
+        }
 
         if (isServer)
             MasterControls();
@@ -33,11 +35,17 @@ public class PlayerBehaviour : NetworkBehaviour {
 	}
 
     void SlaveControls() {
-        if (Input.GetKey(KeyCode.W)) {
-            transform.position += Vector3.forward * Time.deltaTime;
-        }
+        slave.GetInput();
+        GameObject.FindGameObjectWithTag("MainCamera").SetActive(false);
     }
 
-    void MasterControls() { }
+    void MasterControls()
+    {
+        slaveCameras = GameObject.FindGameObjectsWithTag("SlaveCamera");
+        foreach(GameObject cam in slaveCameras)
+        {
+            cam.SetActive(false);
+        }
+    }
 
 }
