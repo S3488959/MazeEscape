@@ -21,7 +21,6 @@ public class PlayerBehaviour : NetworkBehaviour {
             {
                 GameSettings.PLAYSTATE = GameSettings.PLAY_STATE.MASTER;
                 GameSettings.GameStart();
-                GameObject slave = GameObject.FindGameObjectWithTag("Master");
                 gameObject.SetActive(false);
                 GameSettings.isMasterCharOff = true;
             }
