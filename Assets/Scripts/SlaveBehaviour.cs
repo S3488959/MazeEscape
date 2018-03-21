@@ -12,9 +12,6 @@ public class SlaveBehaviour : NetworkBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        if (isServer) {
-            transform.GetChild(0).gameObject.SetActive(false);
-        }
 		
 	}
 	

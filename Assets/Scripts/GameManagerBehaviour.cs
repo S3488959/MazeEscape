@@ -13,7 +13,7 @@ public class GameManagerBehaviour : NetworkManager {
 	}
 
     public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId) {
-        GameObject player = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
+        GameObject player = Instantiate(playerPrefab, Vector3.up, Quaternion.identity);
         slaves.Add(player.GetComponent<PlayerBehaviour>());
         NetworkServer.AddPlayerForConnection(conn, player, playerControllerId);
     }
@@ -37,6 +37,11 @@ public class GameManagerBehaviour : NetworkManager {
 
     public void ConnectAsSpectator() {
         StartClient();
+    }
+
+    public void Disconnect() {
+        //StopHost();
+        //StopClient();
     }
 
 }
