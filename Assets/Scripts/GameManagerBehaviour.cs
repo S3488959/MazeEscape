@@ -9,9 +9,15 @@ public class GameManagerBehaviour : NetworkManager {
     Transform spawnPoints;
     GameObject player;
 
+    GameNetworkEvents networkEvents;
+
+    GameVariables gameVars;
+
 
     // Use this for initialization
     void Start() {
+        networkEvents = transform.GetChild(0).GetComponent<GameNetworkEvents>();
+        gameVars = transform.GetChild(0).GetComponent<GameVariables>();
 	}
 
     
@@ -24,6 +30,10 @@ public class GameManagerBehaviour : NetworkManager {
 
     // Update is called once per frame
     void Update () {
+        if (gameVars.GetTimeRatio() < 0) {
+            networkEvents.CmdMasterWins();
+        }
+
 	}
 
     public PlayerBehaviour[] GetSlaves() {
@@ -31,6 +41,8 @@ public class GameManagerBehaviour : NetworkManager {
     }
 
     public void Host() {
+        //Reset the match size, in case a game has already ended.
+        matchSize = 10;
         StartHost();
     }
 
@@ -42,9 +54,18 @@ public class GameManagerBehaviour : NetworkManager {
         StartClient();
     }
 
-    public void Disconnect() {
-        //StopHost();
-        //StopClient();
+    //Intialise the countdown for total disconnect.
+    //Ensure that no new players can join.
+    public void DisconnectHostCheck() {
+        matchSize = (uint)numPlayers;
+    }
+
+    public void DisconnectHost() {
+        StopHost();
+    } 
+
+    public void DisconnectClient() {
+        StopClient();
     }
 
 }

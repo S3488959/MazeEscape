@@ -26,7 +26,7 @@ public class PlayerBehaviour : NetworkBehaviour {
             }
             else
             {
-                turnOffCamera();
+                TurnOffCamera();
             }
         }      
         else
@@ -56,7 +56,7 @@ public class PlayerBehaviour : NetworkBehaviour {
         
     }
 
-    void turnOffCamera()
+    void TurnOffCamera()
     {
         slaveCameras = GameObject.FindGameObjectsWithTag("SlaveCamera");
         foreach (GameObject cam in slaveCameras)

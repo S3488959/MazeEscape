@@ -21,7 +21,7 @@ public class SectorBehaviour : NetworkBehaviour {
     public static float wallWidth = 0.01f;
 
     //This is the sector that we link NSEW transitions if there is no sector there. It has all its Exits set to true.
-    public static SectorBehaviour NoSector = new SectorBehaviour(true);
+    //public static SectorBehaviour NoSector = new SectorBehaviour(true);
 
     public static GameObject wallDoor;
     public static GameObject fullWall;
@@ -43,10 +43,10 @@ public class SectorBehaviour : NetworkBehaviour {
         public bool WE;
     }
 
-    SectorBehaviour northSector = NoSector;
-    SectorBehaviour westSector = NoSector;
-    SectorBehaviour eastSector = NoSector;
-    SectorBehaviour southSector = NoSector;
+    //SectorBehaviour northSector = NoSector;
+    //SectorBehaviour westSector = NoSector;
+    //SectorBehaviour eastSector = NoSector;
+    //SectorBehaviour southSector = NoSector;
     private Exits exits = new Exits();
 
     public SectorBehaviour(bool globalSector) {

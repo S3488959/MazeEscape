@@ -5,29 +5,32 @@ using UnityEngine.Networking;
 
 public class GameVariables : NetworkBehaviour{
 
+    //How many seconds in a minute.
     private const float SEC_IN_MINUTE = 60;
-    private const float minutes = 11f;
+    //How many minutes the game goes for
+    private const float minutes = 5f;
+    //How many minutes to players wait to begin playing. (Exclusive to game length, still shown in timer)
+    private const float cooldownMinutes = 1f;
 
-    [SyncVar]
-    float MaxTime = minutes * SEC_IN_MINUTE;
-    float TimeRemaining = minutes * SEC_IN_MINUTE;
+
+    float MaxTime = (minutes+cooldownMinutes) * SEC_IN_MINUTE;
+    [SyncVar(hook = "UpdateRatio")]
+    [SerializeField]
+    private float TimeRemaining = (minutes + cooldownMinutes) * SEC_IN_MINUTE;
 
 	// Use this for initialization
 	void Start () {
-		
-	}
+        TimeRemaining = minutes * SEC_IN_MINUTE;
+    }
 	
 	// Update is called once per frame
 	void Update () {
-        TimeRemaining -= Time.deltaTime;
-
-        if (TimeRemaining < 0) {
-            //Game Over
-        }
-
+        if (isServer)
+            TimeRemaining -= Time.deltaTime;
 	}
 
     public string GetTimeAsString() {
+
         int minutesNow = Mathf.FloorToInt(TimeRemaining/SEC_IN_MINUTE);
         int secondsNow = Mathf.Abs(Mathf.FloorToInt(TimeRemaining%SEC_IN_MINUTE));
 
@@ -36,6 +39,10 @@ public class GameVariables : NetworkBehaviour{
             toReturn += "0";
         toReturn += secondsNow;
         return toReturn;
+    }
+
+    public void UpdateRatio(float _timeRemaining) {
+        TimeRemaining = _timeRemaining;
     }
 
     public float GetTimeRatio() {
