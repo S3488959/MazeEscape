@@ -10,7 +10,7 @@ public class GameVariables : NetworkBehaviour{
     //How many minutes the game goes for
     private const float minutes = 5f;
     //How many minutes to players wait to begin playing. (Exclusive to game length, still shown in timer)
-    private const float cooldownMinutes = 1f;
+    private const float cooldownMinutes = 0.1f;
 
 
     float MaxTime = (minutes+cooldownMinutes) * SEC_IN_MINUTE;
@@ -20,7 +20,7 @@ public class GameVariables : NetworkBehaviour{
 
 	// Use this for initialization
 	void Start () {
-        TimeRemaining = minutes * SEC_IN_MINUTE;
+        TimeRemaining = MaxTime;
     }
 	
 	// Update is called once per frame

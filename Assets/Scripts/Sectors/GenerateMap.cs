@@ -15,6 +15,9 @@ using UnityEngine.Networking;
 [RequireComponent(typeof(MasterSectorControl))]
 public class GenerateMap : NetworkBehaviour {
 
+    public GameObject wallDoor;
+    public GameObject fullWall;
+
     //REPLACE THIS WITH A LIST OF ALL THE SECTORS.
     public SectorBehaviour defaultSector;
     //THE ATTACHED MasterSectorContol.
@@ -27,7 +30,8 @@ public class GenerateMap : NetworkBehaviour {
     // Use this for initialization
     void Start () {
 
-        Debug.Log("ServerStart");
+        if (!isServer)
+            return;
 
         //Get the refrence to the master sector control.
         msc = transform.GetComponent<MasterSectorControl>();

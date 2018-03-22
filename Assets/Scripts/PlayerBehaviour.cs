@@ -21,7 +21,7 @@ public class PlayerBehaviour : NetworkBehaviour {
             {
                 GameSettings.PLAYSTATE = GameSettings.PLAY_STATE.MASTER;
                 GameSettings.GameStart();
-                gameObject.SetActive(false);
+                Destroy(gameObject);
                 GameSettings.isMasterCharOff = true;
             }
             else
@@ -40,6 +40,7 @@ public class PlayerBehaviour : NetworkBehaviour {
 	void Update () {
         if (!isLocalPlayer)
         {
+            transform.GetComponent<AudioListener>().enabled = false;
             return;          
         }
 

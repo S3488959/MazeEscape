@@ -43,7 +43,6 @@ public class GameNetworkEvents : NetworkBehaviour {
 
     private void MasterWinsClient() {
         gmb.DisconnectClient();
-
     }
 
 

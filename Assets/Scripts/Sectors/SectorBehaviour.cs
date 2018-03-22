@@ -71,7 +71,7 @@ public class SectorBehaviour : NetworkBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if (!shittyBool) {
+        if (!shittyBool && isServer) {
             GenerateSides(fullWall, wallDoor);
             shittyBool = true;
         }
@@ -88,7 +88,7 @@ public class SectorBehaviour : NetworkBehaviour {
     }
 
 
-    private void GenerateSides(GameObject fullwall, GameObject doorwall) {
+    public void GenerateSides(GameObject fullwall, GameObject doorwall) {
 
         int doorsCount = Random.Range(0, 100);
         if (doorsCount < 35)
@@ -120,7 +120,7 @@ public class SectorBehaviour : NetworkBehaviour {
             else
                 GenerateSouth(doorwall);
             if (side == 3)
-                GenerateWest(fullWall);
+                GenerateWest(fullwall);
             else
                 GenerateWest(doorwall);
         }
@@ -156,13 +156,13 @@ public class SectorBehaviour : NetworkBehaviour {
                     GenerateNorth(doorwall);
                     GenerateEast(fullwall);
                     GenerateSouth(doorwall);
-                    GenerateWest(fullWall);
+                    GenerateWest(fullwall);
                     break;
                 case 5:
                     GenerateNorth(doorwall);
                     GenerateEast(doorwall);
-                    GenerateSouth(fullWall);
-                    GenerateWest(fullWall);
+                    GenerateSouth(fullwall);
+                    GenerateWest(fullwall);
                     break;
             }
         }
@@ -172,22 +172,27 @@ public class SectorBehaviour : NetworkBehaviour {
 
     public void GenerateWest(GameObject go) {
         GameObject newObj = Instantiate(go, transform.position + new Vector3(-5 + wallWidth, 5, 0), Quaternion.Euler(0, -90, 0));
-        newObj.transform.SetParent(transform);
+        SpawnObj(newObj);
     }
 
     public void GenerateEast(GameObject go) {
         GameObject newObj = Instantiate(go, transform.position + new Vector3(5 - wallWidth, 5, 0), Quaternion.Euler(0, 90, 0));
-        newObj.transform.SetParent(transform);
+        SpawnObj(newObj);
     }
 
     public void GenerateNorth(GameObject go) {
         GameObject newObj = Instantiate(go, transform.position + new Vector3(0, 5, 5 - wallWidth), Quaternion.Euler(0, 0, 0));
-        newObj.transform.SetParent(transform);
+        SpawnObj(newObj);
     }
 
     public void GenerateSouth(GameObject go) {
         GameObject newObj = Instantiate(go, transform.position + new Vector3(0, 5, -5 + wallWidth), Quaternion.Euler(0, 180, 0));
+        SpawnObj(newObj);
+    }
+
+    public void SpawnObj(GameObject newObj) {
         newObj.transform.SetParent(transform);
+        NetworkServer.Spawn(newObj);
     }
 
 

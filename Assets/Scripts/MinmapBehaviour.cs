@@ -46,6 +46,7 @@ public class MinmapBehaviour : MonoBehaviour {
 
         miniMapRefresh += Time.deltaTime;
         if (miniMapRefresh > 0.0f) {
+
             /*
                 SlaveBehaviour[] slaves = gameManager.GetSlaves();
                 for (int i = 0; i < slaves.Length; i++) {

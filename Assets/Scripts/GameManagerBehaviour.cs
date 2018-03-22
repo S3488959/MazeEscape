@@ -20,8 +20,6 @@ public class GameManagerBehaviour : NetworkManager {
         gameVars = transform.GetChild(0).GetComponent<GameVariables>();
 	}
 
-    
-
     public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId) {
         player = Instantiate(playerPrefab, Vector3.up, Quaternion.identity);
         slaves.Add(player.GetComponent<PlayerBehaviour>());
