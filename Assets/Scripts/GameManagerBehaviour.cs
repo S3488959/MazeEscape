@@ -38,6 +38,10 @@ public class GameManagerBehaviour : NetworkManager {
         return slaves.ToArray();
     }
 
+    public void SetNetworkAddress(string address) {
+        networkAddress = address;
+    }
+
     public void Host() {
         //Reset the match size, in case a game has already ended.
         matchSize = 10;
@@ -57,6 +61,7 @@ public class GameManagerBehaviour : NetworkManager {
     public void DisconnectHostCheck() {
         matchSize = (uint)numPlayers;
     }
+
 
     public void DisconnectHost() {
         StopHost();
