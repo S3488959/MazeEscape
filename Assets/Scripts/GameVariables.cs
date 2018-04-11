@@ -8,7 +8,7 @@ public class GameVariables : NetworkBehaviour{
     //How many seconds in a minute.
     private const float SEC_IN_MINUTE = 60;
     //How many minutes the game goes for
-    private const float minutes = 1f;
+    private const float minutes = 100f;
     //How many minutes to players wait to begin playing. (Exclusive to game length, still shown in timer)
     private const float cooldownMinutes = 0.1f;
 

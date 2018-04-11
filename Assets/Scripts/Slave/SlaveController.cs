@@ -19,10 +19,10 @@ public class SlaveController : NetworkBehaviour
     private float currentVel;
     private Vector3 input;
     public float turnSmoothing = 0.06f;
+    public float sprintFOV = 100f;
     private Vector3 lastDirection;
 
     private bool isJumping;
-    private bool isSprinting;
     private Vector2 capExtents;
 
     public Camera ThirdPersonCamera;                        
@@ -45,7 +45,6 @@ public class SlaveController : NetworkBehaviour
         anim = GetComponent<Animator>();
 
         capExtents = capsule.bounds.extents;
-        ChangeView();
     }
 	
 	// Update is called once per frame
@@ -57,24 +56,23 @@ public class SlaveController : NetworkBehaviour
     {
 
         anim.SetBool("isGround", IsGrounded());
-        if (IsGrounded() && input != Vector3.zero)
+        if (IsGrounded())
         {
-            anim.SetBool("isMoving", true);
-            Rotate();
-            //Move();
-            AnimatorMove();
+            if(input != Vector3.zero)
+            {
+                anim.SetBool("isMoving", true);
+                Rotate();
+                Move();
+                SetAnimator();
+            }
+            else
+            {
+                anim.SetBool("isMoving", false);
+            }
             Jump();
-        }
-        else
-        {
-            anim.SetBool("isMoving", false);
         }
     }
 
-    private Vector3 GetCameraLook()
-    {
-        return currentCamera.transform.forward * input.z + currentCamera.transform.right * input.x;
-    }
 
     public void GetInput()
     {
@@ -89,23 +87,24 @@ public class SlaveController : NetworkBehaviour
             ChangeView();
         if (Input.GetKeyDown(KeyCode.Space) && !isJumping)
             isJumping = true;
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            input.z *= vel.sprint;
+            if (currentCamera == ThirdPersonCamera)
+                currentCamera.GetComponent<ThirdPersonOrbitCamBasic>().SetFOV(sprintFOV);
+        }
+        else
+        {
+            if (currentCamera == ThirdPersonCamera)
+                currentCamera.GetComponent<ThirdPersonOrbitCamBasic>().ResetFOV();
+        }
     }
 
-    void AnimatorMove()
+    void SetAnimator()
     {
        
         anim.SetFloat("xVel", input.x);
         anim.SetFloat("zVel", input.z);
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            //currentVel *= vel.sprint;
-            anim.SetFloat("zVel", input.z * 2);
-            isSprinting = true;
-        }
-        else
-        {
-            isSprinting = false;
-        }
     }
 
     void Rotate()
@@ -136,17 +135,29 @@ public class SlaveController : NetworkBehaviour
     void Move()
     {
         UpdateCurrentVel(input);
-        Vector3 desiredMove = GetCameraLook();
-        desiredMove = Vector3.ProjectOnPlane(desiredMove, Vector3.up).normalized;
+        Vector3 desiredMove = GetCameraSight();
 
-        desiredMove.x = desiredMove.x * currentVel;
-        desiredMove.z = desiredMove.z * currentVel;
-        desiredMove.y = desiredMove.y * currentVel;
+        desiredMove.x *= currentVel;
+        desiredMove.z *= currentVel;
+
         if (rigid.velocity.sqrMagnitude <
-            (currentVel * currentVel))
+            currentVel * currentVel)
         {
             rigid.AddForce(desiredMove, ForceMode.Impulse);
-        }
+        }           
+    }
+    
+
+    private Vector3 GetCameraLook()
+    {
+        Vector3 curCamForward = Vector3.Scale(currentCamera.transform.forward, new Vector3(1, 0, 1)).normalized;
+        return input.z * curCamForward + input.x * currentCamera.transform.right;
+    }
+
+    private Vector3 GetCameraSight()
+    {
+        Vector3 curCamForward = currentCamera.transform.forward * input.z + currentCamera.transform.right * input.x;
+        return Vector3.ProjectOnPlane(curCamForward, Vector3.up).normalized;
     }
 
     public void UpdateCurrentVel(Vector3 input)
@@ -168,29 +179,19 @@ public class SlaveController : NetworkBehaviour
             //handled last as if strafing and moving forward at the same time forwards speed should take precedence
             currentVel = vel.forward;
         }
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            currentVel *= vel.sprint ;
-            isSprinting = true;
-        }
-        else
-        {
-            isSprinting = false;
-        }
     }
 
     void Jump()
     {
-        if(isJumping && IsGrounded() && !anim.GetBool("isJumping"))
+        if (isJumping && IsGrounded() && !anim.GetBool("isJumping"))
         {
+            
             anim.SetBool("isJumping", true);
-
             capsule.material.dynamicFriction = 0f;
             capsule.material.staticFriction = 0f;
 
-            float velocity = 2f * Mathf.Abs(Physics.gravity.y) * vel.jump;
-            velocity = Mathf.Sqrt(velocity);
-            rigid.AddForce(Vector3.up * velocity, ForceMode.VelocityChange);
+            rigid.velocity = new Vector3(rigid.velocity.x, 0f, rigid.velocity.z);
+            rigid.AddForce(Vector3.up * vel.jump, ForceMode.Impulse);
         }
         else if(anim.GetBool("isJumping"))
         {
@@ -212,6 +213,7 @@ public class SlaveController : NetworkBehaviour
         Ray ray = new Ray(this.transform.position + Vector3.up * 2 * capExtents.x, Vector3.down);
         return Physics.SphereCast(ray, capExtents.x, capExtents.x + 0.2f);
     }
+
     bool IsMoving()
     {
         return (input.x != 0) || (input.z != 0);
@@ -233,7 +235,7 @@ public class SlaveController : NetworkBehaviour
         }
     }
 
-    void ChangeView()
+    public void ChangeView()
     {
         if(isFIrstPersonView)
         {

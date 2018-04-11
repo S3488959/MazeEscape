@@ -12,8 +12,18 @@ public class PlayerBehaviour : NetworkBehaviour {
     [SyncVar]
     public GameObject minimapPosToken = null;
 
-	// Use this for initialization
-	void Start () {
+    public override void OnStartLocalPlayer()
+    {
+        if (!isServer)
+        {
+            GameSettings.PLAYSTATE = GameSettings.PLAY_STATE.PLAYER;
+            slaveCont = gameObject.GetComponent<SlaveController>();
+            slaveCont.ChangeView();
+        }
+    }
+
+    // Use this for initialization
+    void Start () {
 
         if (isServer)
         {
@@ -24,16 +34,7 @@ public class PlayerBehaviour : NetworkBehaviour {
                 Destroy(gameObject);
                 GameSettings.isMasterCharOff = true;
             }
-            else
-            {
-                TurnOffCamera();
-            }
         }      
-        else
-        {
-            slaveCont = gameObject.GetComponent<SlaveController>();
-        }
-
     }
 	
 	// Update is called once per frame
