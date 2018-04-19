@@ -7,8 +7,9 @@ public class MinmapBehaviour : MonoBehaviour {
     private float miniMapRefresh = 10f;
     private int sectorCount;
 
-    public GameObject sectorMini;
+    public GameObject noramlSectorMini;
     public GameObject playerMapToken;
+    public GameObject exitSectorMini;
 
     GameManagerBehaviour gameManager;
 
@@ -20,26 +21,29 @@ public class MinmapBehaviour : MonoBehaviour {
 
     private void Start() {
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManagerBehaviour>();
-        
+
         StartCoroutine(LateStart());
     }
 
     // Use this for initialization
-    IEnumerator LateStart () {
+    IEnumerator LateStart() {
 
         yield return new WaitForSeconds(0.001f);
 
         sects = mcp.GetSectors();
         for (int i = 0; i < sects.Length; i++) {
-
-            GameObject newMinimapNode = Instantiate(sectorMini, transform);
+            GameObject newMinimapNode;
+            if (sects[i].name.Contains("Exit"))
+                newMinimapNode = Instantiate(exitSectorMini, transform);
+            else
+                newMinimapNode = Instantiate(noramlSectorMini, transform);
             sects[i].miniMapCounterpart = newMinimapNode;
         }
-        
+
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update() {
         //Wait until the map has been made to continue.
         if (sects == null)
             return;
@@ -65,12 +69,12 @@ public class MinmapBehaviour : MonoBehaviour {
             for (int i = 0; i < sectsA.Length; i++) {
                 SectorBehaviour sect = sectsA[i].GetComponent<SectorBehaviour>();
                 if (sect.miniMapCounterpart == null) {
-                    GameObject newMinimapNode = Instantiate(sectorMini, transform);
+                    GameObject newMinimapNode = Instantiate(noramlSectorMini, transform);
                     sect.miniMapCounterpart = newMinimapNode;
                 }
-                sect.miniMapCounterpart.GetComponent<RectTransform>().localPosition = new Vector3(sect.transform.position.x * 1.3f, sect.transform.position.z *1.3f, 0);
+                sect.miniMapCounterpart.GetComponent<RectTransform>().localPosition = new Vector3(sect.transform.position.x * 1.3f, sect.transform.position.z * 1.3f, 0);
             }
             miniMapRefresh = 0;
         }
-	}
+    }
 }

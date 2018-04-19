@@ -5,6 +5,9 @@ using UnityEngine.Networking;
 
 public class SectorBehaviour : NetworkBehaviour {
 
+    [SyncVar]
+    public int wallSeed = 0;
+
     //Wether or not the master can control these aspects.
     bool roomMove = true;
     bool roomRotate = true;
@@ -31,8 +34,6 @@ public class SectorBehaviour : NetworkBehaviour {
 
     public GameObject miniMapCounterpart;
 
-    private bool shittyBool = false;
-
     //The list of exits and transitions from this sector.
     //Used to determine if the maze is solvable.
     public struct Exits {
@@ -49,6 +50,8 @@ public class SectorBehaviour : NetworkBehaviour {
     //SectorBehaviour southSector = NoSector;
     private Exits exits = new Exits();
 
+    private bool sidesGenerated = false;
+
     public SectorBehaviour(bool globalSector) {
         //Set all exits to true.
         exits.N = exits.S = exits.E = exits.W = exits.NS = exits.NW = exits.NE = exits.SE = exits.SW = exits.WE = true;
@@ -56,6 +59,11 @@ public class SectorBehaviour : NetworkBehaviour {
 
     // Use this for initialization
     void Start() {
+
+        if (!sidesGenerated) {
+            sidesGenerated = true;
+            GenerateSides(wall, door);
+        }
 
         transform.parent = GameObject.Find("SectorHolder").transform;
 
@@ -71,24 +79,20 @@ public class SectorBehaviour : NetworkBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if (!shittyBool && isServer) {
-            GenerateSides(fullWall, wallDoor);
-            shittyBool = true;
-        }
-
         if (timeLeftToMove > 0)
             UpdateMove();
-
     }
 
     void UpdateMove() {
-        timeLeftToMove -= timeToMove/10f;
+        timeLeftToMove -= timeToMove / 10f;
         transform.position += fullMove / 10;
         //transform.position = Vector3.Lerp(transform.position, transform.position + fullMove, timeToMove);
     }
 
 
     public void GenerateSides(GameObject fullwall, GameObject doorwall) {
+
+        Random.InitState(wallSeed);
 
         int doorsCount = Random.Range(0, 100);
         if (doorsCount < 35)
@@ -172,22 +176,22 @@ public class SectorBehaviour : NetworkBehaviour {
 
     public void GenerateWest(GameObject go) {
         GameObject newObj = Instantiate(go, transform.position + new Vector3(-5 + wallWidth, 5, 0), Quaternion.Euler(0, -90, 0));
-        SpawnObj(newObj);
+        newObj.transform.parent = transform;
     }
 
     public void GenerateEast(GameObject go) {
         GameObject newObj = Instantiate(go, transform.position + new Vector3(5 - wallWidth, 5, 0), Quaternion.Euler(0, 90, 0));
-        SpawnObj(newObj);
+        newObj.transform.parent = transform;
     }
 
     public void GenerateNorth(GameObject go) {
         GameObject newObj = Instantiate(go, transform.position + new Vector3(0, 5, 5 - wallWidth), Quaternion.Euler(0, 0, 0));
-        SpawnObj(newObj);
+        newObj.transform.parent = transform;
     }
 
     public void GenerateSouth(GameObject go) {
         GameObject newObj = Instantiate(go, transform.position + new Vector3(0, 5, -5 + wallWidth), Quaternion.Euler(0, 180, 0));
-        SpawnObj(newObj);
+        newObj.transform.parent = transform;
     }
 
     public void SpawnObj(GameObject newObj) {
@@ -202,7 +206,7 @@ public class SectorBehaviour : NetworkBehaviour {
 
         transform.GetComponent<Collider>().enabled = false;
 
-        if (!Physics.CheckBox(transform.position + direction * 10, new Vector3(sectorSize/2,0, sectorSize / 2))){
+        if (!Physics.CheckBox(transform.position + direction * 10, new Vector3(sectorSize / 2, 0, sectorSize / 2))) {
             //transform.position += direction * 10;
             fullMove = direction * 10;
             timeLeftToMove = timeToMove;
@@ -215,4 +219,3 @@ public class SectorBehaviour : NetworkBehaviour {
     }
 }
 
-		

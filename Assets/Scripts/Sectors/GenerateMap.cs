@@ -15,21 +15,28 @@ using UnityEngine.Networking;
 [RequireComponent(typeof(MasterSectorControl))]
 public class GenerateMap : NetworkBehaviour {
 
-    public GameObject wallDoor;
+    public GameObject doorWall;
     public GameObject fullWall;
 
     //REPLACE THIS WITH A LIST OF ALL THE SECTORS.
     public SectorBehaviour defaultSector;
+    public SectorBehaviour exitSector;
+
     //THE ATTACHED MasterSectorContol.
-    private MasterSectorControl msc; 
+    private MasterSectorControl msc;
+
+
 
     //Dimensions of the map.
     private static int MAP_WIDTH = 16;
     private static int MAP_HEIGHT = 16;
 
     // Use this for initialization
-    void Start () {
+    void Start() {
 
+        Vector2 positionOfExit = new Vector2(Random.Range(0, MAP_WIDTH + 1), Random.Range(0, MAP_HEIGHT + 1));
+        positionOfExit.x = 8;
+        positionOfExit.y = 9;
         if (!isServer)
             return;
 
@@ -37,22 +44,29 @@ public class GenerateMap : NetworkBehaviour {
         msc = transform.GetComponent<MasterSectorControl>();
 
         //For every square in the map...
-        for (int  ix = 0; ix < MAP_WIDTH; ix++) {
+        for (int ix = 0; ix < MAP_WIDTH; ix++) {
             for (int iy = 0; iy < MAP_HEIGHT; iy++) {
+                SectorBehaviour sect;
+                if (ix == positionOfExit.x && iy == positionOfExit.y) {
+                    sect = Instantiate(exitSector, new Vector3((ix - MAP_WIDTH / 2) * 10, 0, (iy - MAP_HEIGHT / 2) * 10), defaultSector.transform.rotation);
+                }
+                else {
 
-                int r = Random.Range(0, 10);
-                if (r < 2)
-                    continue;
+                    int r = Random.Range(0, 10);
+                    if (r < 2)
+                        continue;
 
-                //Create a sector...
-                SectorBehaviour sect = Instantiate(defaultSector, new Vector3((ix-MAP_WIDTH/2)*10, 0, (iy-MAP_HEIGHT/2)*10), defaultSector.transform.rotation);
+                    //Create a sector...
+                    sect = Instantiate(defaultSector, new Vector3((ix - MAP_WIDTH / 2) * 10, 0, (iy - MAP_HEIGHT / 2) * 10), defaultSector.transform.rotation);
+                    sect.wallSeed = Random.Range(-5000, 5000);
+                }
                 //Add it to the master sector control.
                 msc.AddSector(sect);
                 NetworkServer.Spawn(sect.gameObject);
 
             }
         }
-		
-	}
+
+    }
 
 }
