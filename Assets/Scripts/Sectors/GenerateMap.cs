@@ -21,6 +21,7 @@ public class GenerateMap : NetworkBehaviour {
     //REPLACE THIS WITH A LIST OF ALL THE SECTORS.
     public SectorBehaviour defaultSector;
     public SectorBehaviour exitSector;
+    public SectorBehaviour startSector;
 
     //THE ATTACHED MasterSectorContol.
     private MasterSectorControl msc;
@@ -36,7 +37,7 @@ public class GenerateMap : NetworkBehaviour {
 
         Vector2 positionOfExit = new Vector2(Random.Range(0, MAP_WIDTH + 1), Random.Range(0, MAP_HEIGHT + 1));
         positionOfExit.x = 8;
-        positionOfExit.y = 9;
+        positionOfExit.y = 12;
         if (!isServer)
             return;
 
@@ -46,9 +47,21 @@ public class GenerateMap : NetworkBehaviour {
         //For every square in the map...
         for (int ix = 0; ix < MAP_WIDTH; ix++) {
             for (int iy = 0; iy < MAP_HEIGHT; iy++) {
+
                 SectorBehaviour sect;
-                if (ix == positionOfExit.x && iy == positionOfExit.y) {
-                    sect = Instantiate(exitSector, new Vector3((ix - MAP_WIDTH / 2) * 10, 0, (iy - MAP_HEIGHT / 2) * 10), defaultSector.transform.rotation);
+
+                if (ix >= 7 && ix <= 9 && iy >= 7 && iy <= 9) {
+                    if (ix == 8 && iy == 8) {
+                        sect = Instantiate(startSector, new Vector3((ix - MAP_WIDTH / 2) * 10, 0, (iy - MAP_HEIGHT / 2) * 10), startSector.transform.rotation);
+                        sect.wallSeed = -5001;
+                    }
+                    else {
+                        continue;
+                    }
+                }
+                else if (ix == positionOfExit.x && iy == positionOfExit.y) {
+                    sect = Instantiate(exitSector, new Vector3((ix - MAP_WIDTH / 2) * 10, 0, (iy - MAP_HEIGHT / 2) * 10), exitSector.transform.rotation);
+                    sect.wallSeed = -5001;
                 }
                 else {
 

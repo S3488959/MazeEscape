@@ -10,6 +10,7 @@ public class MinmapBehaviour : MonoBehaviour {
     public GameObject noramlSectorMini;
     public GameObject playerMapToken;
     public GameObject exitSectorMini;
+    public GameObject startSectorMini;
 
     GameManagerBehaviour gameManager;
 
@@ -35,6 +36,8 @@ public class MinmapBehaviour : MonoBehaviour {
             GameObject newMinimapNode;
             if (sects[i].name.Contains("Exit"))
                 newMinimapNode = Instantiate(exitSectorMini, transform);
+            else if (sects[i].name.Contains("Start"))
+                newMinimapNode = Instantiate(startSectorMini, transform);
             else
                 newMinimapNode = Instantiate(noramlSectorMini, transform);
             sects[i].miniMapCounterpart = newMinimapNode;

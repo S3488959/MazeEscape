@@ -62,7 +62,8 @@ public class SectorBehaviour : NetworkBehaviour {
 
         if (!sidesGenerated) {
             sidesGenerated = true;
-            GenerateSides(wall, door);
+            if (wallSeed >= -5000)
+                GenerateSides(wall, door);
         }
 
         transform.parent = GameObject.Find("SectorHolder").transform;
