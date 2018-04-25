@@ -14,7 +14,7 @@ public class GameVariables : NetworkBehaviour{
 
 
     float MaxTime = (minutes+cooldownMinutes) * SEC_IN_MINUTE;
-    [SyncVar(hook = "UpdateRatio")]
+    [SyncVar]
     [SerializeField]
     private float TimeRemaining = (minutes + cooldownMinutes) * SEC_IN_MINUTE;
 

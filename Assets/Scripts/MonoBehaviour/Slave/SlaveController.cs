@@ -154,7 +154,7 @@ public class SlaveController : NetworkBehaviour
         return input.z * curCamForward + input.x * currentCamera.transform.right;
     }
 
-    private Vector3 GetCameraSight()
+    public Vector3 GetCameraSight()
     {
         Vector3 curCamForward = currentCamera.transform.forward * input.z + currentCamera.transform.right * input.x;
         return Vector3.ProjectOnPlane(curCamForward, Vector3.up).normalized;

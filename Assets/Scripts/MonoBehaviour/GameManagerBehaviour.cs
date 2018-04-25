@@ -20,8 +20,39 @@ public class GameManagerBehaviour : NetworkManager {
         gameVars = transform.GetChild(0).GetComponent<GameVariables>();
 	}
 
-    public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId) {
-        player = Instantiate(playerPrefab, Vector3.up, Quaternion.identity);
+    public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId)
+    {
+        Vector3 spawnPos = Vector3.up;
+        switch (slaves.Count)
+        {
+            case (2):
+                spawnPos += Vector3.right * 9;
+                break;
+            case (3):
+                spawnPos += Vector3.left * 9;
+                break;
+            case (4):
+                spawnPos += Vector3.forward * 9;
+                break;
+            case (5):
+                spawnPos += Vector3.back * 9;
+                break;
+            case (6):
+                spawnPos += Vector3.right * 9 + Vector3.forward * 9;
+                break;
+            case (7):
+                spawnPos += Vector3.right * 9 + Vector3.back * 9;
+                break;
+            case (8):
+                spawnPos += Vector3.left * 9 + Vector3.forward * 9;
+                break;
+            case (9):
+                spawnPos += Vector3.left * 9 + Vector3.back * 9;
+                break;
+            default:
+                break;
+        }
+        player = Instantiate(playerPrefab, spawnPos, Quaternion.identity);
         slaves.Add(player.GetComponent<PlayerBehaviour>());
         NetworkServer.AddPlayerForConnection(conn, player, playerControllerId);
     }

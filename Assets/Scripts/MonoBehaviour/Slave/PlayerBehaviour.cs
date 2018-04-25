@@ -5,6 +5,7 @@ using UnityEngine.Networking;
 
 public class PlayerBehaviour : NetworkBehaviour {
     GameObject[] slaveCameras;
+    public GameObject Canvas;
     SlaveController slaveCont;
     [SyncVar]
     int ap = 0;
@@ -19,6 +20,7 @@ public class PlayerBehaviour : NetworkBehaviour {
             GameSettings.PLAYSTATE = GameSettings.PLAY_STATE.PLAYER;
             slaveCont = gameObject.GetComponent<SlaveController>();
             slaveCont.ChangeView();
+            Canvas.SetActive(true);
         }
     }
 

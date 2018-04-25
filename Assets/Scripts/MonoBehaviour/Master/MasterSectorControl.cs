@@ -15,7 +15,7 @@ public class MasterSectorControl : MonoBehaviour {
     // Update is called once per frame
     void Update() {
 
-        if (Input.GetKeyDown(KeyCode.Alpha1)) {
+       /* if (Input.GetKeyDown(KeyCode.Alpha1)) {
             GameSettings.PLAYSTATE = GameSettings.PLAY_STATE.MASTER;
             GameSettings.GameStart();
             transform.position = new Vector3(0, 40, 0);
@@ -28,7 +28,7 @@ public class MasterSectorControl : MonoBehaviour {
             GameSettings.PLAYSTATE = GameSettings.PLAY_STATE.SPECTATOR;
             GameSettings.GameStart();
             transform.position = new Vector3(0, 40, 0);
-        }
+        }*/
 
 
         if (GameSettings.PLAYSTATE == GameSettings.PLAY_STATE.MASTER) {
