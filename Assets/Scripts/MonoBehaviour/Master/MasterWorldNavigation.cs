@@ -23,8 +23,20 @@ public class MasterWorldNavigation : MonoBehaviour {
         Vector3 pos = transform.position;
         pos.x += Input.GetAxis("Horizontal") * Time.deltaTime * CAMMOVESPEED;
         pos.z += Input.GetAxis("Vertical") * Time.deltaTime * CAMMOVESPEED;
-        transform.position = pos;
+        
 
+        if(Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            GameObject tmpPlayer = GameObject.FindGameObjectWithTag("MazeSlave");
+            if(tmpPlayer != null)
+            {
+                pos.x = tmpPlayer.transform.position.x;
+                pos.z = tmpPlayer.transform.position.z;
+            }
+            
+        }
+
+        transform.position = pos;
 
 
     }

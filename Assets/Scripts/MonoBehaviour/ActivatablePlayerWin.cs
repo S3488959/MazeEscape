@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class ActivatablePlayerWin : Activatable {
 
+    
 	// Use this for initialization
 	void Start () {
 		
