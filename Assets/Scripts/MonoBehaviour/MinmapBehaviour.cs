@@ -12,8 +12,6 @@ public class MinmapBehaviour : MonoBehaviour {
     public GameObject exitSectorMini;
     public GameObject startSectorMini;
 
-    GameManagerBehaviour gameManager;
-
     SectorBehaviour[] sects;
 
 
@@ -21,8 +19,6 @@ public class MinmapBehaviour : MonoBehaviour {
     public MasterSectorControl mcp;
 
     private void Start() {
-        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManagerBehaviour>();
-
         StartCoroutine(LateStart());
     }
 

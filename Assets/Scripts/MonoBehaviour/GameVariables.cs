@@ -6,11 +6,11 @@ using UnityEngine.Networking;
 public class GameVariables : NetworkBehaviour{
 
     //How many seconds in a minute.
-    public const float SEC_IN_MINUTE = 60;
+    private const float SEC_IN_MINUTE = 60;
     //How many minutes the game goes for
     private const float minutes = 100f;
     //How many minutes to players wait to begin playing. (Exclusive to game length, still shown in timer)
-    public const float cooldownMinutes = 0.1f;
+    private const float cooldownMinutes = 0.1f;
 
 
     float MaxTime = (minutes+cooldownMinutes) * SEC_IN_MINUTE;
@@ -40,6 +40,14 @@ public class GameVariables : NetworkBehaviour{
             toReturn += "0";
         toReturn += secondsNow;
         return toReturn;
+    }
+
+    public bool isCoolDownDone()
+    {
+        if (TimeRemaining <= minutes * SEC_IN_MINUTE)
+            return true;
+        else
+            return false;
     }
 
     public float GetTimeRatio() {

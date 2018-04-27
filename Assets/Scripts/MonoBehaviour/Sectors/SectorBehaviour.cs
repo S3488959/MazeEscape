@@ -8,7 +8,7 @@ public class SectorBehaviour : NetworkBehaviour {
     [SyncVar]
     public int wallSeed = 0;
 
-    //Wether or not the master can control these aspects.
+    //Whether or not the master can control these aspects.
     bool roomMove = true;
     bool roomRotate = true;
 

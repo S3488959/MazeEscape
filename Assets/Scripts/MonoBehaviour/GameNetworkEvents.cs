@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using UnityEngine.Networking;
+using Prototype.NetworkLobby;
 using UnityEngine;
-using UnityEngine.Networking;
 
 public class GameNetworkEvents : NetworkBehaviour {
 
@@ -12,13 +11,13 @@ public class GameNetworkEvents : NetworkBehaviour {
     public event MasterWinsDelegate EventMasterWins;
 
     //The attached GamManagerBehaviour
-    GameManagerBehaviour gmb;
+    LobbyManager lm;
 
 	// Use this for initialization
 	void Start () {
-
+        DontDestroyOnLoad(gameObject);
         //Get the GameManagaer Behaviour
-        gmb = transform.parent.GetComponent<GameManagerBehaviour>();
+        lm = GameObject.FindGameObjectWithTag("LobbyManager").GetComponent<LobbyManager>();
 
         //For the server and the client a diffrent fucntion is called when the master wins.
         EventMasterWins += TestWin;
@@ -38,11 +37,11 @@ public class GameNetworkEvents : NetworkBehaviour {
     }
 
     private void MasterWinsServer() {
-        gmb.DisconnectHostCheck();
+        lm.DisconnectHost();
     }
 
     private void MasterWinsClient() {
-        gmb.DisconnectClient();
+        lm.DisconnectClient();
     }
 
 

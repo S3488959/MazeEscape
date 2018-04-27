@@ -10,12 +10,9 @@ public class GameSettings {
     public enum CONTROL_MODE {KEYMOUSE, GAMEPAD }
     public static CONTROL_MODE CONTROLMODE = CONTROL_MODE.GAMEPAD;
 
-    public static bool isMasterCharOff = false;
 
     public static void GameStart() {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
         GameObject master = GameObject.FindGameObjectWithTag("Master");
-
         if (PLAYSTATE == PLAY_STATE.MASTER || PLAYSTATE == PLAY_STATE.SPECTATOR) {
             master.transform.GetChild(0).gameObject.SetActive(true);
         }

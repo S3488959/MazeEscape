@@ -17,7 +17,7 @@ public class UITimeRemaining : MonoBehaviour {
 
         imageRT = transform.GetChild(0).GetComponent<RectTransform>();
         timeText = transform.GetChild(1).GetComponent<Text>();
-        gameVar = GameObject.FindGameObjectWithTag("GameManager").transform.GetChild(0).GetComponent<GameVariables>();
+        gameVar = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameVariables>();
 		
 	}
 	

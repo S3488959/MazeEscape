@@ -8,9 +8,7 @@ public class GameManagerBehaviour : NetworkManager {
     List<PlayerBehaviour> slaves = new List<PlayerBehaviour>();
     Transform spawnPoints;
     GameObject player;
-
     GameNetworkEvents networkEvents;
-
     GameVariables gameVars;
 
 
