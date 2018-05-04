@@ -29,8 +29,8 @@ public class GenerateMap : NetworkBehaviour {
 
 
     //Dimensions of the map.
-    private static int MAP_WIDTH = 16;
-    private static int MAP_HEIGHT = 16;
+    private static int MAP_WIDTH = 32;
+    private static int MAP_HEIGHT = 32;
 
     // Use this for initialization
     void Start() {

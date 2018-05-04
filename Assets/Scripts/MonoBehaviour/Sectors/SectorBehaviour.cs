@@ -18,6 +18,9 @@ public class SectorBehaviour : NetworkBehaviour {
     private Vector3 fullMove = Vector3.zero;
 
 
+    //Is this sector moveable by the master.
+    public bool isMoveable = true;
+
     //The width and height of the sector.
     public int sectorSize = 1;
 
@@ -202,6 +205,10 @@ public class SectorBehaviour : NetworkBehaviour {
 
 
     public void Move(Vector3 direction) {
+
+        if (!isMoveable)
+            return;
+
         if (timeLeftToMove > 0)
             return;
 
