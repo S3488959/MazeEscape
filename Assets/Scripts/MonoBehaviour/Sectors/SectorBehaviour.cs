@@ -20,6 +20,7 @@ public class SectorBehaviour : NetworkBehaviour {
 
     //Is this sector moveable by the master.
     public bool isMoveable = true;
+    public bool generateWalls = true;
 
     //The width and height of the sector.
     public int sectorSize = 1;
@@ -35,6 +36,7 @@ public class SectorBehaviour : NetworkBehaviour {
     public GameObject wall;
     public GameObject door;
 
+    public GameObject miniMapCounterpartPrefab;
     public GameObject miniMapCounterpart;
 
     //The list of exits and transitions from this sector.
