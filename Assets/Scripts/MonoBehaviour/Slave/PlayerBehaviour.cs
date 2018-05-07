@@ -19,7 +19,6 @@ public class PlayerBehaviour : NetworkBehaviour {
             GameSettings.PLAYSTATE = GameSettings.PLAY_STATE.PLAYER;
             slaveCont = gameObject.GetComponent<SlaveController>();
             slaveCont.ChangeView();
-            SlaveList.GetInstance().AddSlave(gameObject);
             Canvas.SetActive(true);
         }
     }

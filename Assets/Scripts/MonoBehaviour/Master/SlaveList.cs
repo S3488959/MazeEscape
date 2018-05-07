@@ -2,20 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SlaveList
+public class SlaveList : MonoBehaviour
 {
     private static SlaveList sharedInstance;
 
-    List<GameObject> slaves = new List<GameObject>();
+    public GameObject[] slaves = null;
+
+    private void Awake()
+    {
+        sharedInstance = this;
+    }
+
+    public void FindSlaves()
+    {
+        slaves = GameObject.FindGameObjectsWithTag("MazeSlave");
+    }
 
     public static SlaveList GetInstance()
     {
         return sharedInstance;
-    }
-
-    public void AddSlave(GameObject slave)
-    {
-        slaves.Add(slave);
     }
 
     public GameObject GetSlave(int no)
@@ -25,6 +30,6 @@ public class SlaveList
 
     public int GetCount()
     {
-        return slaves.Count;
+        return slaves.Length;
     }
 }

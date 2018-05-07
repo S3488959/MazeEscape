@@ -58,6 +58,7 @@ public class MasterWorldNavigation : MonoBehaviour {
         yield return new WaitForSeconds(1f);
 
         slaveList = SlaveList.GetInstance();
+        slaveList.FindSlaves();
         slaveCount = slaveList.GetCount();
         currentSlave = slaveList.GetSlave(slaveIndex);
     }
