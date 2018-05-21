@@ -24,6 +24,6 @@ public class UITimeRemaining : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         imageRT.localScale = new Vector3(gameVar.GetTimeRatio(),1,1);
-        timeText.text = "Time Remaining: " + gameVar.GetTimeAsString();
+        timeText.text = "Time Remaining: " + gameVar.GetTimeRemainingAsString();
 	}
 }

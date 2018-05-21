@@ -1,6 +1,7 @@
 ﻿using UnityEngine.Networking;
 using Prototype.NetworkLobby;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameNetworkEvents : NetworkBehaviour {
 
@@ -37,11 +38,13 @@ public class GameNetworkEvents : NetworkBehaviour {
     }
 
     private void MasterWinsServer() {
-        lm.DisconnectHost();
+        SceneManager.LoadScene("ResultsScreen");
+
     }
 
     private void MasterWinsClient() {
-        lm.DisconnectClient();
+        SceneManager.LoadScene("ResultsScreen");
+
     }
 
 

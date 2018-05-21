@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 public class GameManager : NetworkBehaviour {
 
@@ -17,7 +18,7 @@ public class GameManager : NetworkBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (gameVars.GetTimeRatio() < 0)
+        if (gameVars.GetTimeRatio() <= 0 && !(SceneManager.GetActiveScene() == SceneManager.GetSceneByName("ResultsScreen")) && !(SceneManager.GetActiveScene() == SceneManager.GetSceneByName("MainMenu")))
         {
             networkEvents.CmdMasterWins();
         }
