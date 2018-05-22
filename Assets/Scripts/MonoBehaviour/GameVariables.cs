@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 public class GameVariables : NetworkBehaviour{
 
     //How many seconds in a minute.
     private const float SEC_IN_MINUTE = 60;
     //How many minutes the game goes for
-    private const float minutes = 100f;
+    private const float minutes = 0.1f;
     //How many minutes to players wait to begin playing. (Exclusive to game length, still shown in timer)
     private const float cooldownMinutes = 0.1f;
 
@@ -24,16 +25,33 @@ public class GameVariables : NetworkBehaviour{
 	
 	// Update is called once per frame
 	void Update () {
-        if (isServer)
+        if (isServer && SceneManager.GetActiveScene() == SceneManager.GetSceneByName("Prototype"))
         {
             TimeRemaining -= Time.deltaTime;
+            if (TimeRemaining < 0)
+                TimeRemaining = 0;
         }
 	}
 
-    public string GetTimeAsString() {
+    public string GetTimeRemainingAsString() {
 
         int minutesNow = Mathf.FloorToInt(TimeRemaining/SEC_IN_MINUTE);
         int secondsNow = Mathf.Abs(Mathf.FloorToInt(TimeRemaining%SEC_IN_MINUTE));
+
+        string toReturn = minutesNow + ":";
+        if (secondsNow < 10)
+            toReturn += "0";
+        toReturn += secondsNow;
+        return toReturn;
+    }
+
+
+    public string GetTimeTakenAsString() {
+
+        float time = MaxTime - TimeRemaining;
+
+        int minutesNow = Mathf.FloorToInt(time / SEC_IN_MINUTE);
+        int secondsNow = Mathf.Abs(Mathf.FloorToInt(time % SEC_IN_MINUTE));
 
         string toReturn = minutesNow + ":";
         if (secondsNow < 10)

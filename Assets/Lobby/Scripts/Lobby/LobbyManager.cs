@@ -387,7 +387,7 @@ namespace Prototype.NetworkLobby
         }
         public void DisconnectHost()
         {
-            StopHost();
+            StopHostClbk();
         }
 
         // ----------------- Client callbacks ------------------
@@ -421,7 +421,7 @@ namespace Prototype.NetworkLobby
 
         public void DisconnectClient()
         {
-            StopClient();
+            StopClientClbk();
         }
     }
 
