@@ -13,6 +13,7 @@ public class SkillControl : MonoBehaviour
     private Skill skill;
     [SerializeField]
     private GameObject player;
+    private PlayerAPController apControl;
     private Image m_buttonImage;
     private float coolTime;
     private float nextReadyTime;
@@ -30,6 +31,7 @@ public class SkillControl : MonoBehaviour
         m_buttonImage.sprite = skill.skillSprite;
         darkMask.sprite = skill.skillSprite;
         coolTime = skill.skillCoolTime;
+        apControl = player.GetComponent<PlayerAPController>();
         skill.Init(player);
         SkillReady();
     }
@@ -37,11 +39,12 @@ public class SkillControl : MonoBehaviour
     void Update()
     {
         bool coolDownComplete = (Time.time > nextReadyTime);
-        if (coolDownComplete)
+        if (coolDownComplete && apControl.CanUseSkill(skill.skillCost))
         {
             SkillReady();
             if (Input.GetButtonDown(skillInputName))
             {
+                
                 if(skill is BreakGameObject)
                 {
                     if (player.GetComponent<BreakGameObjectBehaviour>().CheckIfBreakable())
@@ -77,7 +80,7 @@ public class SkillControl : MonoBehaviour
         coolDownTimeLeft = coolTime;
         darkMask.enabled = true;
         coolDownText.enabled = true;
-
+        apControl.UseSkill(skill.skillCost);
         skill.ActivateSkill();
     }
 }

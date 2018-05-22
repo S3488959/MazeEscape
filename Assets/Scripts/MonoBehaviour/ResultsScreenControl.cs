@@ -18,29 +18,38 @@ public class ResultsScreenControl : NetworkBehaviour {
 
     // Use this for initialization
     void Start () {
-
         //Get the GameManagaer Behaviour
         lm = GameObject.FindGameObjectWithTag("LobbyManager").GetComponent<LobbyManager>();
-
-
-
     }
 	
 	// Update is called once per frame
 	void Update () {
-
         canvas.SetActive(true);
-
-
-
     }
 
-    public void ReturnToMenu() {
-        SceneManager.LoadScene("MainMenu");
+    public void ReturnToMenu()
+    {
+        NetworkManager.singleton.StopClient();
+        NetworkManager.singleton.StopHost();
 
+        NetworkLobbyManager.singleton.StopClient();
+        NetworkLobbyManager.singleton.StopHost();
+
+        NetworkServer.DisconnectAll();
+        /*
         if (isServer)
             lm.DisconnectClient();
         else
             lm.DisconnectHost();
+        */
+    }
+
+    IEnumerator Delay()
+    {
+        yield return new WaitForSeconds(0.1f);
+        Destroy(NetworkLobbyManager.singleton.gameObject);
+
+        yield return new WaitForSeconds(0.1f);
+        SceneManager.LoadScene("MainMenu");
     }
 }
