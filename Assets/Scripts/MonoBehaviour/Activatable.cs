@@ -3,20 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public abstract class Activatable : MonoBehaviour {
-
+public abstract class Activatable : MonoBehaviour
+{
     public Sprite image;
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
     public abstract void Activate();
-
-
 }

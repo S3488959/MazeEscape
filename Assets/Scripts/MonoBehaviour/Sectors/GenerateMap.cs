@@ -13,9 +13,8 @@ using UnityEngine.Networking;
  */
 
 [RequireComponent(typeof(MasterSectorControl))]
-public class GenerateMap : NetworkBehaviour {
-
-
+public class GenerateMap : NetworkBehaviour
+{
 
     public GameObject doorWall;
     public GameObject fullWall;

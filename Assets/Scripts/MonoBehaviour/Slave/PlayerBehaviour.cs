@@ -6,8 +6,6 @@ using UnityEngine.Networking;
 public class PlayerBehaviour : NetworkBehaviour {
     public GameObject Canvas;
     SlaveController slaveCont;
-    [SyncVar]
-    int ap = 0;
     
     [SyncVar]
     public GameObject minimapPosToken = null;
@@ -48,7 +46,8 @@ public class PlayerBehaviour : NetworkBehaviour {
 		
 	}
 
-    void SlaveControls() {
+    void SlaveControls()
+    {
         slaveCont.GetInput();
     }
 

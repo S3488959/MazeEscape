@@ -39,24 +39,28 @@ public class BreakGameObjectBehaviour : NetworkBehaviour
     private IEnumerator HitDelay(GameObject obj)
     {
         yield return new WaitForSeconds(hitDelay);
-        Destroy(obj);
+        CmdDestroyObject(obj.GetComponent<NetworkIdentity>().netId, obj);
+        DestroyObj(obj);
     }
 
     [Command]
-    public void CmdDestroy(GameObject obj)
+    public void CmdDestroyObject(NetworkInstanceId netID, GameObject test)
     {
-        Destroy(obj);
-        RpcDestroy(obj);
+        GameObject obj = NetworkServer.FindLocalObject(netID);
+        NetworkServer.Destroy(obj);
+        RpcDestroy(test);
     }
 
     [ClientRpc]
-    void RpcDestroy(GameObject obj)
+    public void RpcDestroy(GameObject obj)
     {
-        Destroy(obj);
+        DestroyObj(obj);
     }
 
-    public void Destroy(GameObject obj)
+    public void DestroyObj(GameObject obj)
     {
         GameObject.Destroy(obj);
     }
+
+
 }

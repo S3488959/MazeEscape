@@ -7,6 +7,8 @@ public class SectorBehaviour : NetworkBehaviour {
 
     [SyncVar]
     public int wallSeed = 0;
+    [SyncVar]
+    public NetworkInstanceId parentNetId;
 
     //Whether or not the master can control these aspects.
     bool roomMove = true;
@@ -39,6 +41,8 @@ public class SectorBehaviour : NetworkBehaviour {
     public GameObject miniMapCounterpartPrefab;
     public GameObject miniMapCounterpart;
 
+    private GameObject north, south, west, east;
+
     //The list of exits and transitions from this sector.
     //Used to determine if the maze is solvable.
     public struct Exits {
@@ -64,12 +68,17 @@ public class SectorBehaviour : NetworkBehaviour {
 
     // Use this for initialization
     void Start() {
-
-        if (!sidesGenerated) {
-            sidesGenerated = true;
-            if (wallSeed >= -5000)
-                GenerateSides(wall, door);
+        parentNetId = gameObject.GetComponent<NetworkIdentity>().netId;
+        if (isServer)
+        {
+            if (!sidesGenerated)
+            {
+                sidesGenerated = true;
+                if (wallSeed >= -5000)
+                    GenerateSides(wall, door);
+            }
         }
+        
 
         transform.parent = GameObject.Find("SectorHolder").transform;
 
@@ -92,6 +101,10 @@ public class SectorBehaviour : NetworkBehaviour {
     void UpdateMove() {
         timeLeftToMove -= timeToMove / 10f;
         transform.position += fullMove / 10;
+        north.transform.position += fullMove / 10;
+        south.transform.position += fullMove / 10;
+        west.transform.position += fullMove / 10;
+        east.transform.position += fullMove / 10;
         //transform.position = Vector3.Lerp(transform.position, transform.position + fullMove, timeToMove);
     }
 
@@ -181,23 +194,47 @@ public class SectorBehaviour : NetworkBehaviour {
     }
 
     public void GenerateWest(GameObject go) {
-        GameObject newObj = Instantiate(go, transform.position + new Vector3(-5 + wallWidth, 5, 0), Quaternion.Euler(0, -90, 0));
-        newObj.transform.parent = transform;
+        west = Instantiate(go, transform.position + new Vector3(-5 + wallWidth, 5, 0), Quaternion.Euler(0, -90, 0));
+        west.name = wallSeed.ToString();
+        west.transform.parent = transform;
+        NetworkServer.Spawn(west);
+        RpcSetParent(west);
     }
 
     public void GenerateEast(GameObject go) {
-        GameObject newObj = Instantiate(go, transform.position + new Vector3(5 - wallWidth, 5, 0), Quaternion.Euler(0, 90, 0));
-        newObj.transform.parent = transform;
+        east = Instantiate(go, transform.position + new Vector3(5 - wallWidth, 5, 0), Quaternion.Euler(0, 90, 0));
+        east.name = wallSeed.ToString();
+        east.transform.parent = transform;
+        NetworkServer.Spawn(east);
+        RpcSetParent(east);
     }
 
     public void GenerateNorth(GameObject go) {
-        GameObject newObj = Instantiate(go, transform.position + new Vector3(0, 5, 5 - wallWidth), Quaternion.Euler(0, 0, 0));
-        newObj.transform.parent = transform;
+        north = Instantiate(go, transform.position + new Vector3(0, 5, 5 - wallWidth), Quaternion.Euler(0, 0, 0));
+        north.name = wallSeed.ToString();
+        north.transform.parent = transform;
+        NetworkServer.Spawn(north);
+        RpcSetParent(north);
     }
 
     public void GenerateSouth(GameObject go) {
-        GameObject newObj = Instantiate(go, transform.position + new Vector3(0, 5, -5 + wallWidth), Quaternion.Euler(0, 180, 0));
-        newObj.transform.parent = transform;
+        south = Instantiate(go, transform.position + new Vector3(0, 5, -5 + wallWidth), Quaternion.Euler(0, 180, 0));
+        south.name = wallSeed.ToString();
+        south.transform.parent = transform;
+        
+        NetworkServer.Spawn(south);
+        RpcSetParent(south);
+    }
+
+    [ClientRpc]
+    public void RpcSetParent(GameObject obj)
+    {
+        if(parentNetId != null)
+        {
+            GameObject parentObj = NetworkServer.FindLocalObject(parentNetId);
+            Debug.Log(parentObj + " " + obj);
+            obj.transform.parent = parentObj.transform;
+        }
     }
 
     public void SpawnObj(GameObject newObj) {

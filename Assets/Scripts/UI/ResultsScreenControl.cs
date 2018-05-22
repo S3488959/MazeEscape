@@ -46,8 +46,8 @@ public class ResultsScreenControl : NetworkBehaviour {
 
     IEnumerator Delay()
     {
-        yield return new WaitForSeconds(0.1f);
-        Destroy(NetworkLobbyManager.singleton.gameObject);
+        //yield return new WaitForSeconds(0.1f);
+        //Destroy(NetworkLobbyManager.singleton.gameObject);
 
         yield return new WaitForSeconds(0.1f);
         SceneManager.LoadScene("MainMenu");
