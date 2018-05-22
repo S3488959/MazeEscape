@@ -38,26 +38,44 @@ public class SkillControl : MonoBehaviour
 
     void Update()
     {
-        bool coolDownComplete = (Time.time > nextReadyTime);
-        if (coolDownComplete && apControl.CanUseSkill(skill.skillCost))
+        
+        if (IsCooldownFinished())
         {
-            SkillReady();
-            if (Input.GetButtonDown(skillInputName))
+            if(isSkillReady())
             {
-                
-                if(skill is BreakGameObject)
+                SkillReady();
+                if (Input.GetButtonDown(skillInputName))
                 {
-                    if (player.GetComponent<BreakGameObjectBehaviour>().CheckIfBreakable())
-                        ButtonTriggered();
-                }
-                else
                     ButtonTriggered();
+                }
+            }
+            else
+            {
+                darkMask.enabled = true;
+                darkMask.fillAmount = 1;
             }
         }
         else
         {
             CoolDown();
         }
+    }
+
+    private bool isSkillReady()
+    {
+        if (skill is BreakGameObject)
+        {
+            return apControl.CanUseSkill(skill.skillCost) && player.GetComponent<BreakGameObjectBehaviour>().CheckIfBreakable();
+        }
+        else
+        {
+            return apControl.CanUseSkill(skill.skillCost);
+        }
+    }
+
+    private bool IsCooldownFinished()
+    {
+        return (Time.time > nextReadyTime);
     }
 
     private void SkillReady()

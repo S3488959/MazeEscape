@@ -21,6 +21,7 @@ public class PlayerAPController : MonoBehaviour
     {
         if(currentAP >= amountToUse)
         {
+            Debug.Log(currentAP + " " + amountToUse);
             return true;
         }
         return false;
