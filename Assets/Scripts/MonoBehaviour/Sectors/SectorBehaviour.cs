@@ -232,7 +232,7 @@ public class SectorBehaviour : NetworkBehaviour {
         if(parentNetId != null)
         {
             GameObject parentObj = NetworkServer.FindLocalObject(parentNetId);
-            Debug.Log(parentObj + " " + obj);
+            //Debug.Log(parentObj + " " + obj);
             obj.transform.parent = parentObj.transform;
         }
     }

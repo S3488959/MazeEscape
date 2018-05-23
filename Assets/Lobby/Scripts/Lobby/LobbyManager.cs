@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 using UnityEngine.Networking.Types;
 using UnityEngine.Networking.Match;
 using System.Collections;
-
+using System.Collections.Generic;
 
 namespace Prototype.NetworkLobby
 {
@@ -37,6 +37,15 @@ namespace Prototype.NetworkLobby
         public Text statusInfo;
         public Text hostInfo;
 
+        public GameObject selectionPanel;
+
+        [Space]
+        [Header("Chracter Settings")]
+        public GameObject[] characters;
+
+        public Dictionary<int, GameObject> currentPlayers = new Dictionary<int, GameObject>();
+        public Dictionary<int, LobbyPlayer> currentLobbyPlayers = new Dictionary<int, LobbyPlayer>();
+
         //Client numPlayers from NetworkManager is always 0, so we count (throught connect/destroy in LobbyPlayer) the number
         //of players, so that even client know how many player there is.
         [HideInInspector]
@@ -64,6 +73,42 @@ namespace Prototype.NetworkLobby
             DontDestroyOnLoad(gameObject);
 
             SetServerInfo("Offline", "None");
+        }
+
+        public int getPlayerCount()
+        {
+            return currentLobbyPlayers.Count - 1;
+        }
+
+        public void ToggleSelectionPanel(bool enable)
+        {
+            GameObject.FindGameObjectWithTag("SelectionPanel").gameObject.transform.GetChild(0).gameObject.SetActive(enable);
+        }
+
+        public override GameObject OnLobbyServerCreateGamePlayer(NetworkConnection conn, short playerControllerId)
+        {
+            LobbyPlayer newPlayer = currentLobbyPlayers[conn.connectionId];
+            GameObject temp = null;
+            /*I probably don't need this second dictionary but before this try the code was in a different function therefore I needed it and for simplicity I added as it was, I'm pretty sure this is not a problem thou*/
+            if (!currentPlayers.ContainsKey(conn.connectionId))
+            {    //takes connectionsID into the Dictionary and the chosen PC from LobbyPlayer
+
+                temp = characters[newPlayer.charIndex];
+                if (temp != null)
+                {
+                    currentPlayers.Add(conn.connectionId, temp);
+                }
+            }
+
+            GameObject actualPC = currentPlayers[conn.connectionId];
+            
+            Transform startPos = GetStartPosition();
+
+            GameObject _temp = (GameObject)GameObject.Instantiate(actualPC, startPos.position, Quaternion.identity);
+            
+            //NetworkServer.AddPlayerForConnection(conn, _temp, playerControllerId);
+
+            return _temp;
         }
 
         public override void OnLobbyClientSceneChanged(NetworkConnection conn)
@@ -214,13 +259,14 @@ namespace Prototype.NetworkLobby
             ChangeTo(mainMenuPanel);
         }
 
-        class KickMsg : MessageBase { }
+        class KickMsg : MessageBase
+        {
+            
+        }
         public void KickPlayer(NetworkConnection conn)
         {
             conn.Send(MsgKicked, new KickMsg());
         }
-
-
 
 
         public void KickedMessageHandler(NetworkMessage netMsg)
@@ -277,8 +323,13 @@ namespace Prototype.NetworkLobby
             GameObject obj = Instantiate(lobbyPlayerPrefab.gameObject) as GameObject;
 
             LobbyPlayer newPlayer = obj.GetComponent<LobbyPlayer>();
-            newPlayer.ToggleJoinButton(numPlayers + 1 >= minPlayers);
+            newPlayer.ToggleButton(numPlayers + 1 >= minPlayers);
+            if (!currentLobbyPlayers.ContainsKey(conn.connectionId))
+            {    /*takes connectionsID into the Dictionary and the LobbyPlayer 
+                 to have correspondence between the 2 and be able to distinguish which player has selected which character*/
+                currentLobbyPlayers.Add(conn.connectionId, newPlayer);
 
+            }
 
             for (int i = 0; i < lobbySlots.Length; ++i)
             {
@@ -287,7 +338,7 @@ namespace Prototype.NetworkLobby
                 if (p != null)
                 {
                     p.RpcUpdateRemoveButton();
-                    p.ToggleJoinButton(numPlayers + 1 >= minPlayers);
+                    p.ToggleButton(numPlayers + 1 >= minPlayers);
                 }
             }
 
@@ -303,7 +354,7 @@ namespace Prototype.NetworkLobby
                 if (p != null)
                 {
                     p.RpcUpdateRemoveButton();
-                    p.ToggleJoinButton(numPlayers + 1 >= minPlayers);
+                    p.ToggleButton(numPlayers + 1 >= minPlayers);
                 }
             }
         }
@@ -317,7 +368,7 @@ namespace Prototype.NetworkLobby
                 if (p != null)
                 {
                     p.RpcUpdateRemoveButton();
-                    p.ToggleJoinButton(numPlayers >= minPlayers);
+                    p.ToggleButton(numPlayers >= minPlayers);
                 }
             }
 

@@ -12,6 +12,11 @@ public class MasterWorldNavigation : MonoBehaviour {
     private SlaveList slaveList;
     bool controller = true;
 
+    public PlayerBehaviour getCurrSlave()
+    {
+        return currentSlave.GetComponent<PlayerBehaviour>();
+    }
+
 	// Use this for initialization
 	void Start () {
 		if (controller) {

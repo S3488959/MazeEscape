@@ -47,10 +47,7 @@ public class SlaveController : NetworkBehaviour
         capExtents = capsule.bounds.extents;
     }
 	
-	// Update is called once per frame
-	void Update () {
-        
-	}
+
 
     void FixedUpdate()
     {
@@ -73,6 +70,10 @@ public class SlaveController : NetworkBehaviour
         }
     }
 
+    public Camera getCurrentCamera()
+    {
+        return currentCamera;
+    }
 
     public void GetInput()
     {

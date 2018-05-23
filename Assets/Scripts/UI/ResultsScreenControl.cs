@@ -29,6 +29,7 @@ public class ResultsScreenControl : NetworkBehaviour {
 
     public void ReturnToMenu()
     {
+        LobbyManager.s_Singleton.GoBackButton();
         NetworkManager.singleton.StopClient();
         NetworkManager.singleton.StopHost();
 

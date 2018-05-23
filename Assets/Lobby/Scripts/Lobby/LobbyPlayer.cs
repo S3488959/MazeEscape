@@ -17,6 +17,7 @@ namespace Prototype.NetworkLobby
 
         public Button colorButton;
         public InputField nameInput;
+        public Button selectButton;
         public Button readyButton;
         public Button waitingPlayerButton;
         public Button removePlayerButton;
@@ -29,6 +30,8 @@ namespace Prototype.NetworkLobby
         public string playerName = "";
         [SyncVar(hook = "OnMyColor")]
         public Color playerColor = Color.white;
+        [SyncVar(hook = "OnMyCharIndex")]
+        public int charIndex;
 
         public Color OddRowColor = new Color(250.0f / 255.0f, 250.0f / 255.0f, 250.0f / 255.0f, 1.0f);
         public Color EvenRowColor = new Color(180.0f / 255.0f, 180.0f / 255.0f, 180.0f / 255.0f, 1.0f);
@@ -40,6 +43,12 @@ namespace Prototype.NetworkLobby
 
         //static Color OddRowColor = new Color(250.0f / 255.0f, 250.0f / 255.0f, 250.0f / 255.0f, 1.0f);
         //static Color EvenRowColor = new Color(180.0f / 255.0f, 180.0f / 255.0f, 180.0f / 255.0f, 1.0f);
+
+        public void SetCharIndex(int index)
+        {
+            CmdCharIndexChanged(index);
+            OnMyCharIndex(charIndex);
+        }
 
 
         public override void OnClientEnterLobby()
@@ -64,6 +73,7 @@ namespace Prototype.NetworkLobby
             //will be created with the right value currently on server
             OnMyName(playerName);
             OnMyColor(playerColor);
+            
         }
 
         public override void OnStartAuthority()
@@ -91,8 +101,11 @@ namespace Prototype.NetworkLobby
             nameInput.interactable = false;
             removePlayerButton.interactable = NetworkServer.active;
 
-            ChangeReadyButtonColor(NotReadyColor);
+            selectButton.interactable = false;
+            selectButton.gameObject.SetActive(false);
 
+            ChangeReadyButtonColor(NotReadyColor);
+            
             readyButton.transform.GetChild(0).GetComponent<Text>().text = "...";
             readyButton.interactable = false;
 
@@ -109,6 +122,12 @@ namespace Prototype.NetworkLobby
 
             if (playerColor == Color.white)
                 CmdColorChange();
+            if(!isServer)
+            {
+                selectButton.gameObject.SetActive(true);
+                selectButton.transform.GetChild(0).GetComponent<Text>().text = "SELECT";
+                selectButton.interactable = true;
+            }
 
             ChangeReadyButtonColor(JoinColor);
 
@@ -155,7 +174,6 @@ namespace Prototype.NetworkLobby
             if (readyState)
             {
                 ChangeReadyButtonColor(TransparentColor);
-
                 Text textComponent = readyButton.transform.GetChild(0).GetComponent<Text>();
                 textComponent.text = "READY";
                 textComponent.color = ReadyColor;
@@ -166,7 +184,6 @@ namespace Prototype.NetworkLobby
             else
             {
                 ChangeReadyButtonColor(isLocalPlayer ? JoinColor : NotReadyColor);
-
                 Text textComponent = readyButton.transform.GetChild(0).GetComponent<Text>();
                 textComponent.text = isLocalPlayer ? "JOIN" : "...";
                 textComponent.color = Color.white;
@@ -195,6 +212,11 @@ namespace Prototype.NetworkLobby
             colorButton.GetComponent<Image>().color = newColor;
         }
 
+        public void OnMyCharIndex(int newIndex)
+        {
+            charIndex = newIndex;
+        }
+
         //===== UI Handler
 
         //Note that those handler use Command function, as we need to change the value on the server not locally
@@ -202,6 +224,14 @@ namespace Prototype.NetworkLobby
         public void OnColorClicked()
         {
             CmdColorChange();
+        }
+
+        public void OnSelectClicked()
+        {
+            LobbyManager.s_Singleton.ToggleSelectionPanel(true);
+            LobbyManager.s_Singleton.lobbyPanel.gameObject.SetActive(false);
+            selectButton.gameObject.SetActive(false);
+            readyButton.gameObject.SetActive(true);
         }
 
         public void OnReadyClicked()
@@ -225,7 +255,8 @@ namespace Prototype.NetworkLobby
                 
         }
 
-        public void ToggleJoinButton(bool enabled)
+
+        public void ToggleButton(bool enabled)
         {
             readyButton.gameObject.SetActive(enabled);
             waitingPlayerButton.gameObject.SetActive(!enabled);
@@ -289,6 +320,12 @@ namespace Prototype.NetworkLobby
         public void CmdNameChanged(string name)
         {
             playerName = name;
+        }
+
+        [Command]
+        public void CmdCharIndexChanged(int index)
+        {
+            charIndex = index;
         }
 
         //Cleanup thing when get destroy (which happen when client kick or disconnect)

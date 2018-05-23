@@ -10,6 +10,22 @@ public class PlayerAPController : MonoBehaviour
     private void Start()
     {
         currentAP = ap;
+        StartCoroutine("IncreaseAP");
+    }
+
+    private void Update()
+    {
+        
+    }
+
+    IEnumerator IncreaseAP()
+    {
+        while(true)
+        {
+            yield return new WaitForSeconds(2f);
+            if (currentAP < ap)
+                currentAP++;
+        }
     }
 
     public int GetAP()

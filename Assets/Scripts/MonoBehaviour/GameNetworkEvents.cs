@@ -18,7 +18,7 @@ public class GameNetworkEvents : NetworkBehaviour {
 	void Start () {
         DontDestroyOnLoad(gameObject);
         //Get the GameManagaer Behaviour
-        lm = GameObject.FindGameObjectWithTag("LobbyManager").GetComponent<LobbyManager>();
+        lm = LobbyManager.s_Singleton;
 
         //For the server and the client a diffrent fucntion is called when the master wins.
         EventMasterWins += TestWin;
